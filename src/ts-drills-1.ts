@@ -1,7 +1,7 @@
 // Drill 1 — inference and the first errors. Type these, watch what happens without annotations:
 
 let name = "Sufyan";     // hover it in VS Code — TS already knows it's string
-let x = 42;               // ERROR — read the message fully, out loud
+//name = 42;               // ERROR — read the message fully, out loud
 // This will through error because TypeScript has inferred the type of `name` to be `string` based on its initial assignment. 
 // Therefore, trying to assign a number to it violates the type constraint.
 const age = 27;          // hover: not `number` but the literal type 27 — why? (const can't change)
@@ -41,15 +41,13 @@ const u1: User = { id: 1, name: "Sufyan" };            // fine, email optional
 // This will throw an error because the `User` interface does not have an `age` property, 
 // and TypeScript does not allow excess properties in object literals when assigning to a type.
 function sendMail(user: User) {
-    if (user.email) {
-    console.log(user.email.toLowerCase());
+  if (user.email) {
+    console.log(user.email.toLowerCase());   // fix #1: if-check
   }
 
-  console.log(user.email?.toLowerCase());               // ERROR — email might be undefined!
-  // fix it two ways: an if-check, then optional chaining user.email?.toLowerCase(
-
-
+  console.log(user.email?.toLowerCase());    // fix #2: optional chaining — evaluates to undefined if email is missing, no error
 }
+
 
 //Drill 4 — union types + narrowing (the concept of the day)
 function formatId(id: number | string): string {
