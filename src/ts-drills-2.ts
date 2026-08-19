@@ -7,7 +7,7 @@ type UserT = { id: number; name: string; };
 // Difference 1: type can alias ANYTHING; interface only object shapes
 type ID = number | string;          // union — interface can't do this
 type Pair = [number, number];       // tuple — interface can't
-interface ID = number | string;  // uncomment: syntax error, read it
+//interface ID = number | string;  // uncomment: syntax error, read it
 // Error is Duplicate identifier 'ID'. 
 // An interface can only describe object shapes, while a type alias can represent any type, including unions and tuples.
 
@@ -21,7 +21,7 @@ type AdminT = UserT & { role: string };                // type way (intersection
 // Difference 3: declaration merging — interfaces MERGE, types collide
 interface Config { host: string; }
 interface Config { port: number; }                     // legal! Config now has both
-const c: Config = { host: "x", port: 80 };
+const cfg: Config = { host: "x", port: 80 };
 type Conf = { a: 1 }; type Conf2 = { b: 2 };         // uncomment: duplicate identifier error
 
 //conf is declared but it was never used. 
@@ -43,8 +43,10 @@ const a = first([1, 2, 3]);        // hover a: number — T was INFERRED as numb
 // a is declared but its value is never read.
 const b = first(["x", "y"]);       // hover b: string
 const c = first([true]);           // boolean. One function, all types, nothing lost.
-// cannot declare a type variable in a function call, 
-// but you can declare it in the function definition. we cannot declare block shaped 
+// Explicit type arguments ARE legal in a function call: first<boolean>([true]) compiles fine —
+// you're just overriding what TS would otherwise infer. Useful when inference would pick the
+// wrong type, or can't infer anything (e.g. calling first([]) on an empty array).
+const boolResult = first<boolean>([true]);
 
 // 1. Write: last<T> — returns the last element. Trivial, but type it yourself.
 function last<T>(arr: T[]): T { return arr[arr.length - 1]; }
@@ -56,7 +58,7 @@ function longest<T extends { length: number }>(a: T, b: T): T {
 }
 longest("abc", "de");          // fine — strings have length
 longest([1,2], [3]);           // fine — arrays do too
-longest(10, 20);            // uncomment: ERROR — number has no length. Read it.
+//longest(10, 20);           // uncomment: ERROR — number has no length. Read it.
 // This will throw an error because the type `number` does not have a `length` property,
 // and the generic constraint `T extends { length: number }` requires that the type parameter `T` must have a `length` property. 
 // To fix this, we can either pass in values that have a `length` property (like strings or arrays) 
