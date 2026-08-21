@@ -71,13 +71,15 @@ function fetchUser(id: number): Promise<ApiResponse<User>> {
 // 3. declare function patchUser(id: number, changes: ???): Promise<ApiResponse<User>>
 //    — what's the ??? given the client may send any subset of editable fields,
 //      but must never send `id`? (two utilities, nested — this is the drill)
-function patchUser(id: number, changes: Omit<Partial<User>, "id">): Promise<ApiResponse<User>> {
+function patchUser(id: number, changes: Partial<Omit<User, "id">>): Promise<ApiResponse<User>> {
   return new Promise((resolve) => {
     // Simulating an API response
     const updatedUser: User = { id, name: changes.name || "John Doe", email: changes.email || "john.doe@example.com", age: changes.age || 30 };
     resolve({ data: updatedUser, status: 200 });
   });
 }   
+patchUser(1, { id: 9, name: "x" });   // add this line temporarily
+// Object literal may only specify known properties, and 'id' does not exist in type 'Partial<Omit<User, "id">>'.
 // 4. const cache: Record<number, User> = {}
 const cache: Record<number, User> = {
   1: { id: 1, name: "Alice", email: "alice@example.com", age: 25 }
